@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Hands, Results } from '@mediapipe/hands';
+import * as HandsModule from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
+
+type Hands = any;
+type Results = any;
 
 export type GestureType = 'open_palm' | 'closed_fist' | 'pointing' | 'none';
 
@@ -55,7 +58,7 @@ export const useHandTracking = ({ videoElement, enabled = true }: UseHandTrackin
     }
 
     // Initialize Hands
-    const hands = new Hands({
+    const hands = new HandsModule.Hands({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
     });
 

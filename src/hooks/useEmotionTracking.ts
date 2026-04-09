@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { FaceMesh, Results } from '@mediapipe/face_mesh';
+import * as FaceMeshModule from '@mediapipe/face_mesh';
 import { Camera } from '@mediapipe/camera_utils';
+
+type FaceMesh = any;
+type Results = any;
 
 export type EmotionState = 'happy' | 'sad' | 'neutral' | 'analyzing';
 
@@ -79,7 +82,7 @@ export const useEmotionTracking = ({ videoElement, enabled = true }: UseEmotionT
       return;
     }
 
-    const faceMesh = new FaceMesh({
+    const faceMesh = new FaceMeshModule.FaceMesh({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
 

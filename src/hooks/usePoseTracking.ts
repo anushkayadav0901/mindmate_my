@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Pose, Results } from '@mediapipe/pose';
+import * as PoseModule from '@mediapipe/pose';
 import { Camera } from '@mediapipe/camera_utils';
+
+type Pose = any;
+type Results = any;
 
 export type ExerciseType = 'arms_raise' | 'side_stretch' | 'hold_pose' | 'none';
 
@@ -128,7 +131,7 @@ export const usePoseTracking = ({
       return;
     }
 
-    const pose = new Pose({
+    const pose = new PoseModule.Pose({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
     });
 

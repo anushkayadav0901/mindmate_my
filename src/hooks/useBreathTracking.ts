@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Hands, Results } from '@mediapipe/hands';
+import * as HandsModule from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
+
+type Hands = any;
+type Results = any;
 
 interface UseBreathTrackingProps {
   videoElement: React.RefObject<HTMLVideoElement>;
@@ -41,7 +44,7 @@ export const useBreathTracking = ({ videoElement, enabled = true }: UseBreathTra
       return;
     }
 
-    const hands = new Hands({
+    const hands = new HandsModule.Hands({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
     });
 
