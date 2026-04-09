@@ -82,42 +82,52 @@ export const useEmotionTracking = ({ videoElement, enabled = true }: UseEmotionT
       return;
     }
 
-    const faceMesh = new FaceMeshModule.FaceMesh({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
-    });
+    let faceMesh: any;
+    let camera: any;
 
-    faceMesh.setOptions({
-      maxNumFaces: 1,
-      refineLandmarks: false,
-      minDetectionConfidence: 0.6,
-      minTrackingConfidence: 0.6,
-    });
+    const initTracking = async () => {
+      try {
+        faceMesh = new FaceMeshModule.FaceMesh({
+          locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
+        });
 
-    faceMesh.onResults((results) => {
-      // Intentionally skipping drawing utility calls for pure headless performance optimization
-      detectEmotion(results);
-    });
+        faceMesh.setOptions({
+          maxNumFaces: 1,
+          refineLandmarks: false,
+          minDetectionConfidence: 0.6,
+          minTrackingConfidence: 0.6,
+        });
 
-    faceMeshRef.current = faceMesh;
+        faceMesh.onResults((results: any) => {
+          detectEmotion(results);
+        });
 
-    const camera = new Camera(videoElement.current, {
-      onFrame: async () => {
-        if (videoElement.current) {
-          await faceMesh.send({ image: videoElement.current });
-        }
-      },
-      width: 640,
-      height: 480,
-    });
+        faceMeshRef.current = faceMesh;
 
-    camera.start().then(() => {
-      setIsReady(true);
-    });
-    cameraRef.current = camera;
+        camera = new Camera(videoElement.current!, {
+          onFrame: async () => {
+            if (videoElement.current) {
+              await faceMesh.send({ image: videoElement.current });
+            }
+          },
+          width: 640,
+          height: 480,
+        });
+
+        await camera.start();
+        setIsReady(true);
+        cameraRef.current = camera;
+      } catch (error) {
+        console.error('Failed to initialize emotion tracking:', error);
+        setEmotion('neutral');
+      }
+    };
+
+    initTracking();
 
     return () => {
-      camera.stop();
-      faceMesh.close();
+      if (camera) camera.stop();
+      if (faceMesh) faceMesh.close();
       setIsReady(false);
     };
   }, [enabled, videoElement, detectEmotion]);
