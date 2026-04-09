@@ -65,6 +65,9 @@ tmp/
 *.tmp
 *.temp
 
+# Python requirements backup (not needed for frontend deployment)
+requirements.txt.backup
+
 # API Keys and environment variables
 .env
 *.env
