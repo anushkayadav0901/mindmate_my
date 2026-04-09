@@ -16,7 +16,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 You can find these in your Supabase project settings -> API.
     `);
   } else {
-    throw new Error('Missing Supabase environment variables');
+    console.warn('Supabase not configured - running in offline mode');
   }
 }
 

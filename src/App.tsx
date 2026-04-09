@@ -56,9 +56,14 @@ export default function App() {
       setWellnessPoints(parseInt(points, 10));
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
+    // Safely check Supabase auth
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setUser(session?.user ?? null);
+      })
+      .catch((error) => {
+        console.warn('Supabase auth not available:', error);
+      });
 
     const {
       data: { subscription },
